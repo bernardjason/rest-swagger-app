@@ -39,13 +39,12 @@ class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeries
     Logger.info("end weather api scheduled read")
   }
   
-  @ApiOperation(nickname = "a wrapper api to populate the weather for a city", value = 
-      "a wrapper api to populate the weather for a city",
-    notes = "Returns a list of timeseries points",
+  @ApiOperation(value = "a wrapper api to populate the weather for a city. It will invoke api.openweathermap.org's API to get the actual value", 
+    notes = "Returns timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
   @ApiResponses(Array( new ApiResponse(code = 400, message = "Invalid")))
-  def addWeather(@ApiParam(name = "name", required = true, defaultValue = "London") name:String) =
+  def addWeather(@ApiParam(name = "name", value = "examples are London or Darlington", required = true, defaultValue = "London") name:String) =
     Action.async(BodyParsers.parse.empty) { implicit request => 
 
     val futureResponse: Future[WSResponse] = for {

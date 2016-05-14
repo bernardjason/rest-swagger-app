@@ -43,13 +43,12 @@ class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOp
     Logger.info("end stock read")
   }
 
-  @ApiOperation(nickname = "a wrapper api to populate the current stock value", value = 
-      "a wrapper api to populate the current stock value for a quote",
-    notes = "Returns a list of timeseries points",
+  @ApiOperation(value = "a wrapper api to populate the current stock value. It will call Yahoo's query.yahooapis.com to get the actual stock value",
+    notes = "Return timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
   @ApiResponses(Array( new ApiResponse(code = 400, message = "Invalid")))
-  def addStock(@ApiParam(name = "name", required = true, defaultValue = "^FTSE") name:String) =
+  def addStock(@ApiParam(name = "name", value = "examples are ^FTSE or BT-A.L", required = true, defaultValue = "^FTSE") name:String) =
     Action.async(BodyParsers.parse.empty) { implicit request => 
 
     val futureResponse: Future[WSResponse] = for {

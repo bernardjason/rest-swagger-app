@@ -30,7 +30,7 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations, ws: WSClient) e
     httpMethod = "GET")
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid")))
-  def getByName(@ApiParam(name = "name", required = true, defaultValue = "^FTSE") name: String) =
+  def getByName(@ApiParam(name = "name", value = "examples are London or Darlington or ^FTSE or BT-A.L" , required = true, defaultValue = "^FTSE") name: String) =
     Action.async {
       timeSeries.list(name).map { timeSeriresRows =>
         Ok(Json.toJson(timeSeriresRows))
@@ -47,10 +47,11 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations, ws: WSClient) e
       dataType = "models.TimeSeriesLabelValue",
       required = true,
       paramType = "body",
-      value = "label value pair object")))
+      value = "label value pair object. Examples are <br>{ \"label\": \"2016-05-14T06:40:35Z\",<br> \"value\": \"1000\" }"
+      )))
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid")))
-  def postByName(@ApiParam(name = "name", required = true, defaultValue = "^FTSE") name: String) = Action.async(BodyParsers.parse.json) { implicit request =>
+  def postByName(@ApiParam(name = "name",  value = "examples are London or Darlington or ^FTSE or BT-A.L" , required = true, defaultValue = "^FTSE") name: String) = Action.async(BodyParsers.parse.json) { implicit request =>
 
     val create = request.body.validate[models.TimeSeriesLabelValue]
 
