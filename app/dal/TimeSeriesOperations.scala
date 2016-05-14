@@ -16,12 +16,12 @@ class TimeSeriesOperations @Inject() (dbConfigProvider: DatabaseConfigProvider)(
   import dbConfig._
   import driver.api._
 
-  class TimeSeriesTable(tag: Tag) extends Table[models.TimeSeriesRow](tag, "TIMESERIES") {
+  class TimeSeriesTable(tag: Tag) extends Table[models.TimeSeriesRow](tag, "timeseries") {
     
-    def id = column[Long]("ID",O.PrimaryKey,O.AutoInc)
-    def name = column[String]("NAME")
-    def label = column[String]("LABEL")
-    def value = column[String]("VALUE")
+    def id = column[Long]("id",O.PrimaryKey,O.AutoInc)
+    def name = column[String]("name")
+    def label = column[String]("label")
+    def value = column[String]("value")
 
     override def * = (id,name,label,value) <> (models.TimeSeriesRow.tupled, models.TimeSeriesRow.unapply _)
   }
@@ -33,9 +33,8 @@ class TimeSeriesOperations @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     (timeSeries.map(p => (p.name, p.label,p.value))
       returning timeSeries.map(_.id)
      
-      into ((entry, id) => TimeSeriesRow(id, entry._1, entry._2,entry._3))
+      into ((entry, id) => { TimeSeriesRow(id,entry._1, entry._2,entry._3)} )
     ) .+=(name, label, value)
-
   }
 
   def list(name:String): Future[Seq[TimeSeriesRow]] = db.run {

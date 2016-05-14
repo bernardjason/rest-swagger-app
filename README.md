@@ -10,25 +10,26 @@ Clone the code, then type
 ./activator run
 
 visit from browser either 
-	http://127.0.0.1:9000/swagger
+	http://127.0.0.1:9000/
 to see the swagger documentation for the API
 or
-	http://127.0.0.1:9000
-to see what the chart looks like
+	http://127.0.0.1:9000/weatherchart
+	http://127.0.0.1:9000/stockchart
+to see what the charts looks like
 
 You can add more data using either Swagger UI from the POST operation
-http://localhost:9000/swagger#!/timeseries/postByName
-with name set to energy and body being
+http://127.0.0.1:9000/#!/timeseries/postByName
+with name set to ^FTSE and body being
 {
-  "label": "12",
-  "value": "10"
+  "label": "2016-05-14T06:40:35Z",
+  "value": "1000"
 }
 
 which generates a curl request of and runs the equivalent
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-  "label": "12",
-  "value": "10"
-}' 'http://localhost:9000/timeseries/energy'
+  "label": "2016-05-14T06:40:35Z",
+  "value": "1000"
+}' 'http://localhost:9000/timeseries/%5EFTSE'
 
 Now the graph will change
 

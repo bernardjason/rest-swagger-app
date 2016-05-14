@@ -1,13 +1,8 @@
-# --- !Ups
 
 create table timeseries (
-  id INTEGER PRIMARY KEY,
+  id SERIAL,
   name VARCHAR NOT NULL,
   label VARCHAR NOT NULL,
   value VARCHAR NOT NULL
 );
-
-# --- !Downs
-
-drop table timeseries ;
 

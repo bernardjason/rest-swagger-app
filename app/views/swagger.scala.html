@@ -35,7 +35,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-    	 	url = "@{s"${current.configuration.getString("swagger.api.basepath").getOrElse("http://localhost:9000")}/swagger.json"}"
+    	 	url = "@{s"${current.configuration.getString("herokuhost").getOrElse("http://localhost:9000")}/swagger.json"}"
       }
 
       // Pre load translate...

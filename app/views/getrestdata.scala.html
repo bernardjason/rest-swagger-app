@@ -1,0 +1,60 @@
+@* commonjs Template File *@
+@(timeSeries1: String,timeSeries2:String)(dateArithmetic:String => Html)
+
+	function getData() {
+			var series1 = "@timeSeries1"
+			var series2 = "@timeSeries2"
+			jsonData.rows.length = 0;
+
+			var response1
+			var response2
+			var call1 = $.getJSON("/timeseries/" + series1, function(data) { response1=data } );
+			var call2 = $.getJSON("/timeseries/" + series2, function(data) { response2=data } );
+			$.when(call1, call2).then(function () {
+
+				var NA=-999999
+				var collect = {}; 
+				for (var i = 0; i < response1.length; i++) {
+					var roundedTime =response1[i].label
+    				collect[ roundedTime ] = [ response1[i].value , NA ] ;
+				}
+				for (var i = 0; i < response2.length; i++) {
+					var roundedTime =response2[i].label
+					if ( typeof collect[ roundedTime ] === 'undefined' ) {
+    					collect[roundedTime] = [ NA , response2[i].value ] ;
+					} else {
+    					var current = collect[ roundedTime ] ;
+    					current[1]= response2[i].value;
+					}
+				} 
+
+				/*
+				merge the data together. And if a point isnt set for a time period use the previous value.
+				*/
+				var first=NA
+				var second=NA
+				for(var k in collect) {
+					if (collect[k][0] != NA  ) first = collect[k][0]
+					if (collect[k][1] != NA  ) second = collect[k][1]
+					if ( first != NA && second != NA ) {	
+						mapped[k]=[ first , second ] 
+					}
+				}
+
+				jsonData.rows.length = 0;
+
+				var sortIt = Object.keys(mapped).sort()
+
+				for(var k in sortIt ) {
+		  	        var key = sortIt[k]
+		  	        var value = mapped[ key ]
+		  	        var c =  {"v":new Date(   @dateArithmetic("key")  ) }
+  	        		var v = { "v": value[0]  }
+  	        		var v2 = { "v": value[1]  }
+					jsonData.rows.push({ "c" : [ c  , v , v2 ] });
+
+				}
+				console.log(JSON.stringify(jsonData	));
+				chart.draw(googleData, options);
+			});
+		}

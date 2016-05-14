@@ -13,12 +13,14 @@ import play.api.mvc.Controller
 import scala.collection.mutable.ArrayBuffer
 import models.TimeSeriesRow
 import io.swagger.annotations._
+import play.api.mvc._
+import play.api.libs.ws._
 
 @Api(value = "/timeseries", description = "Operations for timeseries use and population")
 @Singleton
-class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Controller {
+class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations, ws: WSClient) extends Controller {
 
-  val accessControlAllowOrigin = ("Access-Control-Allow-Origin", "*")
+  //val accessControlAllowOrigin = ("Access-Control-Allow-Origin", "*")
 
   @ApiOperation(nickname = "getByName", value = 
       "get information series for a timeseries by name."+ 
@@ -28,10 +30,10 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Control
     httpMethod = "GET")
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid")))
-  def getByName(@ApiParam(name = "name", required = true, defaultValue = "motivation") name: String) =
+  def getByName(@ApiParam(name = "name", required = true, defaultValue = "^FTSE") name: String) =
     Action.async {
       timeSeries.list(name).map { timeSeriresRows =>
-        Ok(Json.toJson(timeSeriresRows)).withHeaders(accessControlAllowOrigin)
+        Ok(Json.toJson(timeSeriresRows))
       }
     }
 
@@ -48,7 +50,7 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Control
       value = "label value pair object")))
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid")))
-  def postByName(@ApiParam(name = "name", required = true, defaultValue = "energy") name: String) = Action.async(BodyParsers.parse.json) { implicit request =>
+  def postByName(@ApiParam(name = "name", required = true, defaultValue = "^FTSE") name: String) = Action.async(BodyParsers.parse.json) { implicit request =>
 
     val create = request.body.validate[models.TimeSeriesLabelValue]
 
@@ -58,10 +60,12 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Control
       },
       row => {
         timeSeries.create(name, row.label, row.value).map(created =>
-          Ok(Json.toJson(created)).withHeaders(accessControlAllowOrigin))
+          Ok(Json.toJson(created)))
       })
 
   }
+
+ 
 }
 
 

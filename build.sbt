@@ -8,8 +8,12 @@ scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   cache,
+  filters,
   "joda-time" % "joda-time" % "2.3",
   "org.xerial" % "sqlite-jdbc" % "3.8.6"
+
+  ,"org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
+
   ,"com.typesafe.play" %% "play-slick" % "1.1.1"
   ,"com.typesafe.play" %% "play-slick-evolutions" % "1.1.1"
 
@@ -21,6 +25,7 @@ libraryDependencies ++= Seq(
   ,"org.webjars" % "swagger-ui" % "2.1.4"
   ,"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.2"
 
+  ,javaWs
 )
 
 libraryDependencies += evolutions

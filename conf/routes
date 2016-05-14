@@ -2,16 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET /         					controllers.HomeController.index
-GET /swagger  					controllers.HomeController.swagger
+GET /weatherchart    			controllers.HomeController.weather
+GET /stockchart    				controllers.HomeController.stock
+GET /							controllers.HomeController.swagger
 GET /swagger.json           	controllers.ApiHelpController.getResources
-# Map static resources from the /public folder to the /assets URL path 
-GET /assets/*file 				controllers.Assets.at(path="/public", file)
 
-######GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-#####GET / controllers.Assets.at(path="/public", file="index.html")
-#####GET / controllers.Assets.at(path="/public", file="index.html")
+# Map static resources from the /public folder to the /assets URL path , required for swagger
+GET /assets/*file 				controllers.Assets.at(path="/public", file)
 
 GET /timeseries/:name			controllers.TimeSeriesApi.getByName(name)
 POST /timeseries/:name			controllers.TimeSeriesApi.postByName(name)
-
+POST /weather/:name				controllers.WeatherApi.addWeather(name)
+POST /stock/:name				controllers.StockApi.addStock(name)

@@ -1,0 +1,68 @@
+@* examplechart Template File *@
+<html>
+<head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script>
+	google.charts.load('current', {
+		packages : [ 'corechart' ]
+	});
+	google.charts.setOnLoadCallback(drawStacked);
+	var jsonData
+	var mapped = {}; 
+	function drawStacked() {
+		jsonData = {
+			"cols" : [ {
+				"label" : "Date&Time",
+				"type" : "datetime"
+			}, {
+				"label" : "Temp FTSE",
+				"type" : "number"
+			},
+			{
+				"label" : "Temp BT",
+				"type" : "number"
+			}
+			],
+			"rows" : [ ]
+		}
+		var googleData = new google.visualization.DataTable(jsonData);
+
+		var options = {
+			title : 'Stock price FTSE and BT',
+			hAxis : {
+				title : 'Time of Day'
+			},
+			vAxis : {
+				title : 'price'
+			},
+			curveType: 'function',		
+			intervals: { 'style':'line' },
+			legend: 'none',
+			isStacked:'true'
+			
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+		chart.draw(googleData, options);
+		
+		@getrestdata("^FTSE","BT-A.L"){ date => @date}
+			
+	
+		getData();
+		setInterval( getData , 5000);
+				
+	}
+</script>
+
+</head>
+<body>
+<div id="chart_div"></div>
+<div id="swagger">
+<a href="@routes.HomeController.swagger" >
+<img src='@routes.Assets.at("lib/swagger-ui/images/favicon-32x32.png")' style="vertical-align:middle;width:32px;height:32px;"></a>
+<a href="@routes.HomeController.swagger" >Swagger</a>
+</div>
+</body>
+</html>

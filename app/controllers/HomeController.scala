@@ -23,16 +23,20 @@ import play.Logger
 import dal.TimeSeriesOperations
 
 @Singleton
-class HomeController @Inject()(timeSeries:TimeSeriesOperations) extends Controller  {
+class HomeController extends Controller  {
 
   def swagger = Action {
     request =>
       Ok(views.html.swagger())
   }
 
-  def index = Action {
+  def weather = Action {
     request =>
-      Ok(views.html.examplechart())
+      Ok(views.html.exampleweather())
+  }
+  def stock = Action {
+    request =>
+      Ok(views.html.examplestock())
   }
 
 }
