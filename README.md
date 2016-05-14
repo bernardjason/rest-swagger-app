@@ -1,11 +1,17 @@
 the project uses Play framework Scala project alongside Swagger to provide a simple api to show data being held on 
 the server side for a Google Graph implementation. I've taken Google Chart example
 
-Running here https://secure-retreat-29275.herokuapp.com/
-
 https://developers.google.com/chart/interactive/docs/gallery/columnchart
 
-and stored a sample set of data in a Sqlite database, being accessed using a simple REST API.
+(I've got a Heroku instance here showing this project running)
+Running here https://secure-retreat-29275.herokuapp.com/
+
+and called 2 external API's 
+http://api.openweathermap.org/data/2.5/weather
+and
+http://query.yahooapis.com/v1/public/yql
+
+to get data and store it for display on two chart2. The data is stored in a Sqlite database, being accessed using a simple REST API.
 
 Clone the code, then type
 
@@ -36,3 +42,5 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 Now the graph will change
 
 There is no validation of the data held either on the backend or front end so the graph can break.
+
+Final note, on Heroku the database i postgres. Evolutions are disabled as the db scripts for sqlite and postgres are different. Heroku db create is in heroku.psql
