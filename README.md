@@ -1,6 +1,8 @@
 the project uses Play framework Scala project alongside Swagger to provide a simple api to show data being held on 
 the server side for a Google Graph implementation. I've taken Google Chart example
 
+Running here https://secure-retreat-29275.herokuapp.com/
+
 https://developers.google.com/chart/interactive/docs/gallery/columnchart
 
 and stored a sample set of data in a Sqlite database, being accessed using a simple REST API.
