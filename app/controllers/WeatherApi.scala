@@ -22,10 +22,10 @@ import play.Logger;
 
 @Api(value = "/weather", description = "simple api to get the weather we are interested in")
 @Singleton
-class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOperations, ws: WSClient,system: ActorSystem) extends Controller {
+class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOperations, ws: WSClient, system: ActorSystem) extends Controller {
 
-  //val accessControlAllowOrigin = ("Access-Control-Allow-Origin", "*")
-  val weatherApiUrl="http://api.openweathermap.org/data/2.5/weather"
+  val weatherApiUrl = "http://api.openweathermap.org/data/2.5/weather"
+  val APPID = "13c4195b3e9f9898fea40601ab493c7f"
 
   import scala.concurrent.duration._
 
@@ -38,39 +38,40 @@ class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeries
     ws.url(s"http://0.0.0.0:${port}/weather/Darlington").post("")
     Logger.info("end weather api scheduled read")
   }
-  
-  @ApiOperation(value = "a wrapper api to populate the weather for a city. It will invoke api.openweathermap.org's API to get the actual value", 
+
+  @ApiOperation(value = "a wrapper api to populate the weather for a city. It will invoke api.openweathermap.org's API to get the actual value",
     notes = "Returns timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
-  @ApiResponses(Array( new ApiResponse(code = 400, message = "Invalid")))
-  def addWeather(@ApiParam(name = "name", value = "examples are London or Darlington", required = true, defaultValue = "London") name:String) =
-    Action.async(BodyParsers.parse.empty) { implicit request => 
+  @ApiResponses(Array(new ApiResponse(code = 400, message = "Invalid")))
+  def addWeather(@ApiParam(name = "name", value = "examples are London or Darlington", required = true, defaultValue = "London") name: String) =
+    Action.async(BodyParsers.parse.empty) { implicit request =>
 
-    val futureResponse: Future[WSResponse] = for {
-          openWeatherResponse <- ws.url(weatherApiUrl)
-            .withQueryString("q" -> name )
-            .withQueryString("units" -> "metric")
-            .withQueryString("APPID" -> "13c4195b3e9f9898fea40601ab493c7f")
+      val futureResponse: Future[WSResponse] = for {
+        openWeatherResponse <- ws.url(weatherApiUrl)
+          .withQueryString("q" -> name)
+          .withQueryString("units" -> "metric")
+          .withQueryString("APPID" -> APPID)
           .get()
-          responseThree <- {
-                Logger.info(s"${name} ${openWeatherResponse.body}")
-                val temp = (openWeatherResponse.json \ "main"  \ "temp" ).as[Float]
-                val dt = (openWeatherResponse.json \ "dt"   ).as[Long]
-                val store = Json.toJson(models.TimeSeriesLabelValue(""+dt,""+temp))
-               
-                val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
+        timeSeriesResponse <- {
+          Logger.info(s"${name} ${openWeatherResponse.body}")
+          val temp = (openWeatherResponse.json \ "main" \ "temp").as[Float]
+          val dt = (openWeatherResponse.json \ "dt").as[Long]
+          val store = Json.toJson(models.TimeSeriesLabelValue("" + dt, "" + temp))
 
-                routes.TimeSeriesApi.postByName("")
-                ws.url(url).post(store)
+          val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
+
+          routes.TimeSeriesApi.postByName("")
+          ws.url(url).post(store)
+        }
+      } yield timeSeriesResponse
+
+      futureResponse.map {
+        r =>
+          {
+            Ok(r.json).as("application/json")
           }
-    } yield responseThree
-    
-   futureResponse.map{  
-      r => {
-        Ok(r.json).as("application/json")
       }
-    }
     }
 }
 

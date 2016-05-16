@@ -7,25 +7,17 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  cache,
   filters,
-  "joda-time" % "joda-time" % "2.3",
   "org.xerial" % "sqlite-jdbc" % "3.8.6"
-
   ,"org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
-
   ,"com.typesafe.play" %% "play-slick" % "1.1.1"
   ,"com.typesafe.play" %% "play-slick-evolutions" % "1.1.1"
-
-  // 2.5 play ,"com.typesafe.play" %% "play-slick" % "2.0.0"
-  // 2.5 play //,"com.typesafe.play" %% "play-slick-evolutions" % "2.0.0"
-
-  //,"io.swagger" %% "swagger-play2" % "1.6.0"
   ,"io.swagger" %% "swagger-play2" % "1.5.1"
   ,"org.webjars" % "swagger-ui" % "2.1.4"
-  ,"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.7.2"
-
   ,javaWs
+  // 2.5 play ,"com.typesafe.play" %% "play-slick" % "2.0.0"
+  // 2.5 play //,"com.typesafe.play" %% "play-slick-evolutions" % "2.0.0"
+  //,"io.swagger" %% "swagger-play2" % "1.6.0"
 )
 
 libraryDependencies += evolutions

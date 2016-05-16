@@ -14,13 +14,10 @@ import scala.collection.mutable.ArrayBuffer
 import models.TimeSeriesRow
 import io.swagger.annotations._
 import play.api.mvc._
-import play.api.libs.ws._
 
 @Api(value = "/timeseries", description = "Operations for timeseries use and population")
 @Singleton
-class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations, ws: WSClient) extends Controller {
-
-  //val accessControlAllowOrigin = ("Access-Control-Allow-Origin", "*")
+class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Controller {
 
   @ApiOperation(nickname = "getByName", value = 
       "get information series for a timeseries by name."+ 

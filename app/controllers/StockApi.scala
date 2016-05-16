@@ -22,18 +22,16 @@ import play.Logger;
 
 @Api(value = "/stock", description = "simple api to get the price of a stock we are interested in")
 @Singleton
-class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOperations, ws: WSClient,system: ActorSystem) extends Controller {
+class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOperations, ws: WSClient, system: ActorSystem) extends Controller {
 
-  //val accessControlAllowOrigin = ("Access-Control-Allow-Origin", "*")
-  
   val stockApiUrl = "http://query.yahooapis.com/v1/public/yql"
-  def yql(quote:String)=s"select * from yahoo.finance.quotes where symbol ='${quote}'"
-  val env="store://datatables.org/alltableswithkeys"
+  def yql(quote: String) = s"select * from yahoo.finance.quotes where symbol ='${quote}'"
+  val env = "store://datatables.org/alltableswithkeys"
 
   import scala.concurrent.duration._
 
   val port = Play
-  
+
   system.scheduler.schedule(10 seconds, 60 seconds) {
     Logger.info("Start stock read")
 
@@ -47,34 +45,35 @@ class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOp
     notes = "Return timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
-  @ApiResponses(Array( new ApiResponse(code = 400, message = "Invalid")))
-  def addStock(@ApiParam(name = "name", value = "examples are ^FTSE or BT-A.L", required = true, defaultValue = "^FTSE") name:String) =
-    Action.async(BodyParsers.parse.empty) { implicit request => 
+  @ApiResponses(Array(new ApiResponse(code = 400, message = "Invalid")))
+  def addStock(@ApiParam(name = "name", value = "examples are ^FTSE or BT-A.L", required = true, defaultValue = "^FTSE") name: String) =
+    Action.async(BodyParsers.parse.empty) { implicit request =>
 
-    val futureResponse: Future[WSResponse] = for {
-          yahooResponse <- ws.url(stockApiUrl)
-          .withQueryString("q" -> yql(name) )
-          .withQueryString("env" -> env )
-          .withQueryString("format" -> "json" )
+      val futureResponse: Future[WSResponse] = for {
+        yahooResponse <- ws.url(stockApiUrl)
+          .withQueryString("q" -> yql(name))
+          .withQueryString("env" -> env)
+          .withQueryString("format" -> "json")
           .get()
-          responseThree <- {
-                Logger.info(s"${name} ${yahooResponse.body}")
-                val dt = (yahooResponse.json \ "query" \ "created"   ).as[String]
-                val lastTradePriceOnly = (yahooResponse.json \  "query"  \"results" \"quote" \"LastTradePriceOnly" ).as[String]
-                val store = Json.toJson(models.TimeSeriesLabelValue(""+dt,""+lastTradePriceOnly))
-               
-                val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
+        timeSeriesResponse <- {
+          Logger.info(s"${name} ${yahooResponse.body}")
+          val dt = (yahooResponse.json \ "query" \ "created").as[String]
+          val lastTradePriceOnly = (yahooResponse.json \ "query" \ "results" \ "quote" \ "LastTradePriceOnly").as[String]
+          val store = Json.toJson(models.TimeSeriesLabelValue("" + dt, "" + lastTradePriceOnly))
 
-                routes.TimeSeriesApi.postByName("")
-                ws.url(url).post(store)
+          val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
+
+          routes.TimeSeriesApi.postByName("")
+          ws.url(url).post(store)
+        }
+      } yield timeSeriesResponse
+
+      futureResponse.map {
+        r =>
+          {
+            Ok(r.json).as("application/json")
           }
-    } yield responseThree
-    
-   futureResponse.map{  
-      r => {
-        Ok(r.json).as("application/json")
       }
-    }
     }
 }
 
