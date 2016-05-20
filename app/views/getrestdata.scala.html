@@ -1,5 +1,5 @@
 @* commonjs Template File *@
-@(timeSeries1: String,timeSeries2:String)(dateArithmetic:String => Html)
+@(timeSeries1: String,timeSeries2:String)(dateArithmetic:String => Html)(valueArithmetic:String => Html)
 
 	function getData() {
 			var series1 = "@timeSeries1"
@@ -16,15 +16,15 @@
 				var collect = {}; 
 				for (var i = 0; i < response1.length; i++) {
 					var roundedTime =response1[i].label
-    				collect[ roundedTime ] = [ response1[i].value , NA ] ;
+    				collect[ roundedTime ] = [ @valueArithmetic("response1[i].value") , NA ] ;
 				}
 				for (var i = 0; i < response2.length; i++) {
 					var roundedTime =response2[i].label
 					if ( typeof collect[ roundedTime ] === 'undefined' ) {
-    					collect[roundedTime] = [ NA , response2[i].value ] ;
+    					collect[roundedTime] = [ NA , @valueArithmetic("response2[i].value") ] ;
 					} else {
     					var current = collect[ roundedTime ] ;
-    					current[1]= response2[i].value;
+    					current[1]=  @valueArithmetic("response2[i].value") ;
 					}
 				} 
 

@@ -43,7 +43,7 @@ class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeries
     notes = "Returns timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
-  @ApiResponses(Array(new ApiResponse(code = 400, message = "Invalid")))
+  @ApiResponses(Array(new ApiResponse(code = 500, message = "Opps")))
   def addWeather(@ApiParam(name = "name", value = "examples are London or Darlington", required = true, defaultValue = "London") name: String) =
     Action.async(BodyParsers.parse.empty) { implicit request =>
 

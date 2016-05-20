@@ -26,7 +26,7 @@ class TimeSeriesApi @Inject() (timeSeries: TimeSeriesOperations) extends Control
     responseContainer = "List", response = classOf[models.TimeSeriesRow],
     httpMethod = "GET")
   @ApiResponses(Array(
-    new ApiResponse(code = 400, message = "Invalid")))
+    new ApiResponse(code = 500, message = "Opps")))
   def getByName(@ApiParam(name = "name", value = "examples are London or Darlington or ^FTSE or BT-A.L" , required = true, defaultValue = "^FTSE") name: String) =
     Action.async {
       timeSeries.list(name).map { timeSeriresRows =>

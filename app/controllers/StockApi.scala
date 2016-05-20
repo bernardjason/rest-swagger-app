@@ -45,7 +45,7 @@ class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOp
     notes = "Return timeseries point",
     response = classOf[models.TimeSeriesRow],
     httpMethod = "POST")
-  @ApiResponses(Array(new ApiResponse(code = 400, message = "Invalid")))
+  @ApiResponses(Array(new ApiResponse(code = 500, message = "Opps")))
   def addStock(@ApiParam(name = "name", value = "examples are ^FTSE or BT-A.L", required = true, defaultValue = "^FTSE") name: String) =
     Action.async(BodyParsers.parse.empty) { implicit request =>
 

@@ -35,7 +35,7 @@
 				title : 'Time of Day'
 			},
 			vAxis : {
-				title : 'price'
+				title : '£ price'
 			},
 			curveType: 'function',		
 			intervals: { 'style':'line' },
@@ -47,7 +47,7 @@
 		var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
 		chart.draw(googleData, options);
 		
-		@getrestdata("^FTSE","BT-A.L"){ date => @date}
+		@getrestdata("^FTSE","BT-A.L"){ date => @date}{ value => @value /100}
 			
 	
 		getData();

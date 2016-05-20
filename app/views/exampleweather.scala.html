@@ -48,7 +48,7 @@
 		chart.draw(googleData, options);
 	
 		// just in case we need to play with the dates
-		@getrestdata("London","Darlington"){ date => @date *1000 }
+		@getrestdata("London","Darlington"){ date => @date *1000 }{value => @value }
 
 		getData();
 		setInterval( getData , 5000);
