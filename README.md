@@ -3,8 +3,10 @@ the server side for a Google Graph implementation. I've taken Google Chart examp
 
 https://developers.google.com/chart/interactive/docs/gallery/columnchart
 
-(I've got a Heroku instance here showing this project running)
-Running here https://secure-retreat-29275.herokuapp.com/
+I've an example of the code running here on Heroku
+
+
+https://secure-retreat-29275.herokuapp.com/
 
 and called 2 external API's 
 http://api.openweathermap.org/data/2.5/weather
@@ -43,4 +45,4 @@ Now the graph will change
 
 There is no validation of the data held either on the backend or front end so the graph can break.
 
-Final note, on Heroku the database i postgres. Evolutions are disabled as the db scripts for sqlite and postgres are different. Heroku db create is in heroku.psql
+Final note, on Heroku the database I use postgres. Evolutions are disabled as the db scripts for sqlite and postgres are different. Heroku db create script is in heroku.psql
