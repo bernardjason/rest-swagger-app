@@ -13,7 +13,7 @@
 			$.when(call1, call2).then(function () {
 
 				var NA=-999999
-				var collect = {}; 
+				var collect = []; 
 				for (var i = 0; i < response1.length; i++) {
 					var roundedTime =response1[i].label
     				collect[ roundedTime ] = [ @valueArithmetic("response1[i].value") , NA ] ;
@@ -23,8 +23,7 @@
 					if ( typeof collect[ roundedTime ] === 'undefined' ) {
     					collect[roundedTime] = [ NA , @valueArithmetic("response2[i].value") ] ;
 					} else {
-    					var current = collect[ roundedTime ] ;
-    					current[1]=  @valueArithmetic("response2[i].value") ;
+    					collect[roundedTime][1]= @valueArithmetic("response2[i].value") ;
 					}
 				} 
 
@@ -33,27 +32,26 @@
 				*/
 				var first=NA
 				var second=NA
-				for(var k in collect) {
-					if (collect[k][0] != NA  ) first = collect[k][0]
-					if (collect[k][1] != NA  ) second = collect[k][1]
+				var orderDate = Object.keys(collect).sort();
+				for(var d in orderDate) {
+					var labelIndex = orderDate[d]
+					if (collect[labelIndex][0] != NA  ) first = collect[labelIndex][0]
+					if (collect[labelIndex][1] != NA  ) second = collect[labelIndex][1]
 					if ( first != NA && second != NA ) {	
-						mapped[k]=[ first , second ] 
+						mapped[labelIndex]=[ first , second ] 
 					}
 				}
 
 				jsonData.rows.length = 0;
 
-				var sortIt = Object.keys(mapped).sort()
-
-				for(var k in sortIt ) {
-		  	        var key = sortIt[k]
+				for(var key in mapped ) {
 		  	        var value = mapped[ key ]
-		  	        var c =  {"v":new Date(   @dateArithmetic("key")  ) }
+		  	        var c =  {"v":new Date(   @dateArithmetic("key") ) }
   	        		var v = { "v": value[0]  }
   	        		var v2 = { "v": value[1]  }
 					jsonData.rows.push({ "c" : [ c  , v , v2 ] });
-
 				}
+
 				console.log(JSON.stringify(jsonData	));
 				chart.draw(googleData, options);
 			});
