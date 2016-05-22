@@ -30,7 +30,7 @@ class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeries
   import scala.concurrent.duration._
 
   val port = Play
-  system.scheduler.schedule(60 seconds, 60 seconds) {
+  system.scheduler.schedule(60 seconds, 120 seconds) {
     Logger.info("Start weather api scheduled read")
 
     val port = conf.getInt("http.port").getOrElse(9000)

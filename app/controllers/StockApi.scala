@@ -32,7 +32,7 @@ class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOp
 
   val port = Play
 
-  system.scheduler.schedule(10 seconds, 60 seconds) {
+  system.scheduler.schedule(60 seconds, 120 seconds) {
     Logger.info("Start stock read")
 
     val port = conf.getInt("http.port").getOrElse(9000)
