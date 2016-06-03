@@ -63,7 +63,6 @@ class StockApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeriesOp
 
           val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
 
-          routes.TimeSeriesApi.postByName("")
           ws.url(url).post(store)
         }
       } yield timeSeriesResponse

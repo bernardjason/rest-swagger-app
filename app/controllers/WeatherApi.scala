@@ -61,7 +61,6 @@ class WeatherApi @Inject() (conf: play.api.Configuration, timeSeries: TimeSeries
 
           val url = routes.TimeSeriesApi.postByName(name).absoluteURL()
 
-          routes.TimeSeriesApi.postByName("")
           ws.url(url).post(store)
         }
       } yield timeSeriesResponse
