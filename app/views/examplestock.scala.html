@@ -31,12 +31,14 @@
 
 		var options = {
 			title : 'Stock price FTSE and BT',
-			hAxis : {
-				title : 'Time of Day'
-			},
-			vAxis : {
-				title : '£ price'
-			},
+			 series: {
+          0: {targetAxisIndex: 0},
+          1: {targetAxisIndex: 1}
+        },
+        vAxes: {
+          0: {title: 'FTSE' , ticks:[6100,6200,6300,6500]},
+          1: {title: 'Price', ticks:[350,400,450,500,550,600] }
+        }, 
 			curveType: 'function',		
 			intervals: { 'style':'line' },
 			legend: 'none',
@@ -47,7 +49,7 @@
 		var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
 		chart.draw(googleData, options);
 		
-		@getrestdata("^FTSE","BT-A.L"){ date => @date}{ value => @value /100}
+		@getrestdata("^FTSE","BT-A.L"){ date => @date}{ value => @value }
 			
 	
 		getData();
