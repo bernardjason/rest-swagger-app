@@ -53,6 +53,7 @@ $git push heroku master
 ```
 
 After much scrolling a message similar to this is displayed.
+```
 remote:        Procfile declares types -> web
 remote: -----> Launching...
 remote:        Released v4
