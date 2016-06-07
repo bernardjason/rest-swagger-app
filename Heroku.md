@@ -17,7 +17,7 @@ slick.dbs.default.db.user = ${?JDBC_DATABASE_USERNAME}
 slick.dbs.default.db.password = ${?JDBC_DATABASE_PASSWORD}
 ```
 
-1. Add the Postgres library to the build.sbt dependencies
+4. Add the Postgres library to the build.sbt dependencies
 ```
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
 ```
@@ -25,12 +25,12 @@ slick.dbs.default.db.password = ${?JDBC_DATABASE_PASSWORD}
 You can leave the Sqlite library in there too. The required driver is picked as default to be Sqlite but override with the Heroku Procfile
 
 
-1. Create a Procfile that gives Heroku some instructions on what to do to start the application. Two important ones are to not the the automatic PLAY evolutions step as the database schema is for Sqlite and needs modification for Postgres. The second item is to define the HTTP port for the application so that the scheduled job can call the REST resources. Procfile also defines the Postgres drive information.
+5. Create a Procfile that gives Heroku some instructions on what to do to start the application. Two important ones are to not the the automatic PLAY evolutions step as the database schema is for Sqlite and needs modification for Postgres. The second item is to define the HTTP port for the application so that the scheduled job can call the REST resources. Procfile also defines the Postgres drive information.
 Procfile
 ```
 web: target/universal/stage/bin/rest-swagger-app  -Dhttp.port=${PORT} -Devolutionplugin=disabled -Dplay.evolutions.enabled=false -Dherokuhost=https://secure-retreat-29275.herokuapp.com -Dslick.dbs.default.driver=slick.driver.PostgresDriver\$ -Dslick.dbs.default.db.driver=org.postgresql.Driver
 ```
-1. The database schema between Postgres and Sqlite is different due to the way both Sqlite and Postgres generate the ID field so we cannot use PLAY evolutions easily here. 
+6. The database schema between Postgres and Sqlite is different due to the way both Sqlite and Postgres generate the ID field so we cannot use PLAY evolutions easily here. 
 Postgres schema
 ```
 create table timeseries (
